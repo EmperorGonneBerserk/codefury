@@ -1,139 +1,223 @@
-import React, { useEffect, useState } from 'react';
-import { View, Button, Alert, StyleSheet, ActivityIndicator, Linking } from 'react-native';
-import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
-import * as Location from 'expo-location';
-import { Accelerometer } from 'expo-sensors';
+import React, { useState, useEffect, useCallback } from 'react';
+import { View, Text, FlatList, ScrollView, StyleSheet, SafeAreaView, RefreshControl } from 'react-native';
+import axios from 'axios';
 
-export default function AutomatedSOS() {
-  const [accelerometerData, setAccelerometerData] = useState({});
-  const [location, setLocation] = useState(null);
-  const [region, setRegion] = useState(null);
-  const [loading, setLoading] = useState(true);
+const HomeScreen = () => {
+  const [disasterAlerts, setDisasterAlerts] = useState([]);
+  const [safetyTips, setSafetyTips] = useState([]);
+  const [criticalUpdates, setCriticalUpdates] = useState([]);
+  const [disasterNews, setDisasterNews] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
-    const fetchLocationAndStartAccelerometer = async () => {
-      try {
-        let { status } = await Location.requestForegroundPermissionsAsync();
-        console.log('Location permission status:', status);
-
-        if (status !== 'granted') {
-          Alert.alert('Permission to access location was denied');
-          setLoading(false);
-          return;
-        }
-
-        let location = await Location.getCurrentPositionAsync({});
-        console.log('Location fetched:', location);
-        setLocation(location);
-
-        const newRegion = {
-          latitude: location.coords.latitude,
-          longitude: location.coords.longitude,
-          latitudeDelta: 0.01,
-          longitudeDelta: 0.01,
-        };
-        setRegion(newRegion);
-        console.log('Region set:', newRegion);
-
-        // Start the accelerometer
-        const subscription = Accelerometer.addListener(data => {
-          console.log('Accelerometer data:', data); // Log accelerometer data
-          setAccelerometerData(data);
-          detectEmergency(data);
-        });
-
-        Accelerometer.setUpdateInterval(500); // Adjust as needed
-        setLoading(false);
-
-        return () => subscription && subscription.remove(); // Clean up the subscription
-      } catch (error) {
-        console.error('Error fetching location or starting sensors:', error);
-        setLoading(false);
-      }
-    };
-
-    fetchLocationAndStartAccelerometer();
+    fetchAllData();
   }, []);
 
-  const detectEmergency = (data) => {
-    const { x, y, z } = data;
-    const acceleration = Math.sqrt(x * x + y * y + z * z);
-
-    console.log('Calculated acceleration:', acceleration);
-
-    if (acceleration > 1.5) {  // Lower threshold for testing
-      console.log('Emergency detected! Sending SOS...');
-      sendSOS();
+  const fetchAllData = async () => {
+    try {
+      await Promise.all([
+        fetchDisasterAlerts(),
+        fetchSafetyTips(),
+        fetchCriticalUpdates(),
+        fetchDisasterNews()
+      ]);
+    } catch (error) {
+      console.error('Error fetching data:', error);
     }
   };
 
-  const sendSOS = () => {
-    if (!location) {
-      Alert.alert('Location is not available. Unable to send SOS.');
-      return;
-    }
+  const fetchDisasterAlerts = async () => {
+    // Replace with real API call
+    const alerts = [
+      { id: '1', title: 'Flood Warning', description: 'Heavy rain expected in the area.', timestamp: '10 mins ago' },
+      { id: '2', title: 'Earthquake Alert', description: 'Minor tremors detected.', timestamp: '2 hours ago' },
+    ];
+    setDisasterAlerts(alerts);
+  };
 
-    const phoneNumber = '1234567890'; // Replace with the actual phone number
-    const message = `SOS! I need help. My current location is: https://maps.google.com/?q=${location.coords.latitude},${location.coords.longitude}`;
-    const url = `sms:${phoneNumber}?body=${encodeURIComponent(message)}`;
+  const fetchSafetyTips = async () => {
+    // Replace with real API call
+    const tips = [
+      { id: '1', tip: 'Keep an emergency kit with essential items.' },
+      { id: '2', tip: 'Know the nearest evacuation routes.' },
+    ];
+    setSafetyTips(tips);
+  };
 
-    Linking.canOpenURL(url)
-      .then(supported => {
-        if (!supported) {
-          Alert.alert('Error', 'SMS is not supported on this device.');
-        } else {
-          return Linking.openURL(url);
+  const fetchCriticalUpdates = async () => {
+    // Replace with real API call
+    const updates = [
+      { id: '1', update: 'Shelters are available at XYZ locations.' },
+      { id: '2', update: 'Emergency services are on high alert.' },
+    ];
+    setCriticalUpdates(updates);
+  };
+
+  const fetchDisasterNews = async () => {
+    try {
+      const response = await axios.get(
+        'https://newsapi.org/v2/everything',
+        {
+          params: {
+            q: 'disaster OR earthquake OR flood OR hurricane OR wildfire',
+            language: 'en',
+            sortBy: 'publishedAt',
+            apiKey: 'a3056361ae624fdfb591257ab6106047',
+          },
         }
-      })
-      .catch(err => console.error('Error occurred', err));
+      );
+      setDisasterNews(response.data.articles);
+    } catch (error) {
+      console.error('Error fetching news:', error);
+    }
   };
 
-  return (
-    <View style={styles.container}>
-      {loading ? (
-        <ActivityIndicator size="large" color="#0000ff" />
-      ) : (
-        region && (
-          <MapView
-            style={styles.map}
-            provider={PROVIDER_GOOGLE}
-            region={region}
-            showsUserLocation
-            showsMyLocationButton
-            showsTraffic
-          >
-            {location && (
-              <Marker
-                coordinate={{
-                  latitude: location.coords.latitude,
-                  longitude: location.coords.longitude,
-                }}
-                title="You are here"
-                description="Current Location"
-              />
-            )}
-          </MapView>
-        )
-      )}
-      {!loading && (
-        <View style={styles.buttonContainer}>
-          <Button title="Send SOS" onPress={sendSOS} />
-        </View>
-      )}
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    fetchAllData().then(() => setRefreshing(false));
+  }, []);
+
+  const renderAlertItem = ({ item }) => (
+    <View style={styles.card}>
+      <Text style={styles.cardTitle}>{item.title}</Text>
+      <Text>{item.description}</Text>
+      <Text style={styles.timestamp}>{item.timestamp}</Text>
     </View>
   );
-}
+
+  const renderSafetyTipItem = ({ item }) => (
+    <View style={styles.tipCard}>
+      <Text>{item.tip}</Text>
+    </View>
+  );
+
+  const renderCriticalUpdateItem = ({ item }) => (
+    <View style={styles.updateCard}>
+      <Text>{item.update}</Text>
+    </View>
+  );
+
+  const renderNewsItem = ({ item }) => (
+    <View style={styles.newsCard}>
+      <Text style={styles.newsTitle}>{item.title}</Text>
+      <Text>{item.description}</Text>
+      <Text style={styles.timestamp}>{new Date(item.publishedAt).toLocaleString()}</Text>
+    </View>
+  );
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <ScrollView
+        contentContainerStyle={styles.scrollViewContent}
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+      >
+        <Text style={styles.sectionTitle}>Latest Disaster Alerts</Text>
+        <FlatList
+          data={disasterAlerts}
+          renderItem={renderAlertItem}
+          keyExtractor={(item) => item.id}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.listContainer}
+        />
+
+        <Text style={styles.sectionTitle}>Safety Tips</Text>
+        <FlatList
+          data={safetyTips}
+          renderItem={renderSafetyTipItem}
+          keyExtractor={(item) => item.id}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.listContainer}
+        />
+
+        <Text style={styles.sectionTitle}>Critical Updates</Text>
+        <FlatList
+          data={criticalUpdates}
+          renderItem={renderCriticalUpdateItem}
+          keyExtractor={(item) => item.id}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.listContainer}
+        />
+
+        <Text style={styles.sectionTitle}>Latest Disaster News</Text>
+        <FlatList
+          data={disasterNews}
+          renderItem={renderNewsItem}
+          keyExtractor={(item, index) => index.toString()}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.listContainer}
+        />
+      </ScrollView>
+    </SafeAreaView>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#f8f8f8',
   },
-  map: {
-    flex: 1,
+  scrollViewContent: {
+    padding: 16,
+    flexGrow: 1,
+    justifyContent: 'center',
   },
-  buttonContainer: {
-    position: 'absolute',
-    bottom: 20,
-    left: '40%',
+  sectionTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 8,
+  },
+  card: {
+    backgroundColor: '#fff',
+    padding: 16,
+    borderRadius: 8,
+    marginRight: 16,
+    width: 250,
+    elevation: 2,
+  },
+  tipCard: {
+    backgroundColor: '#e0f7fa',
+    padding: 16,
+    borderRadius: 8,
+    marginRight: 16,
+    width: 250,
+    elevation: 2,
+  },
+  updateCard: {
+    backgroundColor: '#ffeb3b',
+    padding: 16,
+    borderRadius: 8,
+    marginRight: 16,
+    width: 250,
+    elevation: 2,
+  },
+  newsCard: {
+    backgroundColor: '#fff3e0',
+    padding: 16,
+    borderRadius: 8,
+    marginRight: 16,
+    width: 300,
+    elevation: 2,
+  },
+  cardTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  newsTitle: {
+    fontSize: 14,
+    fontWeight: 'bold',
+  },
+  timestamp: {
+    marginTop: 8,
+    fontSize: 12,
+    color: '#888',
+  },
+  listContainer: {
+    paddingBottom: 16,
   },
 });
+
+export default HomeScreen;
