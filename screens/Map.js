@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { View, Button, Alert, StyleSheet, ActivityIndicator, Linking, Text } from 'react-native';
+import { View, Button, Alert, StyleSheet, ActivityIndicator, Linking } from 'react-native';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import * as Location from 'expo-location';
 import { Accelerometer } from 'expo-sensors';
 
-export default function HomeScreen({ navigation }) {  // Changed the function name to HomeScreen
+export default function HomeScreen({ navigation }) {
   const [accelerometerData, setAccelerometerData] = useState({});
   const [location, setLocation] = useState(null);
   const [region, setRegion] = useState(null);
@@ -37,7 +37,7 @@ export default function HomeScreen({ navigation }) {  // Changed the function na
 
         // Start the accelerometer
         const subscription = Accelerometer.addListener(data => {
-          console.log('Accelerometer data:', data); // Log accelerometer data
+          console.log('Accelerometer data:', data);
           setAccelerometerData(data);
           detectEmergency(data);
         });
@@ -61,31 +61,39 @@ export default function HomeScreen({ navigation }) {  // Changed the function na
 
     console.log('Calculated acceleration:', acceleration);
 
-    if (acceleration > 1.5) {  // Lower threshold for testing
+    if (acceleration > 1.5) {
       console.log('Emergency detected! Sending SOS...');
       sendSOS();
     }
   };
 
-  const sendSOS = () => {
-    if (!location) {
-      Alert.alert('Location is not available. Unable to send SOS.');
-      return;
+  const sendSOS = async () => {
+    try {
+      let location = await Location.getCurrentPositionAsync({});
+      console.log('Location fetched for SOS:', location);
+
+      if (!location) {
+        Alert.alert('Location is not available. Unable to send SOS.');
+        return;
+      }
+
+      const phoneNumber = '1234567890'; // Replace with the actual phone number
+      const message = `SOS! I need help. My current location is: https://maps.google.com/?q=${location.coords.latitude},${location.coords.longitude}`;
+      const url = `sms:${phoneNumber}?body=${encodeURIComponent(message)}`;
+
+      Linking.canOpenURL(url)
+        .then(supported => {
+          if (!supported) {
+            Alert.alert('Error', 'SMS is not supported on this device.');
+          } else {
+            return Linking.openURL(url);
+          }
+        })
+        .catch(err => console.error('Error occurred', err));
+    } catch (error) {
+      console.error('Error fetching location for SOS:', error);
+      Alert.alert('Error', 'Unable to fetch location for SOS.');
     }
-
-    const phoneNumber = '1234567890'; // Replace with the actual phone number
-    const message = `SOS! I need help. My current location is: https://maps.google.com/?q=${location.coords.latitude},${location.coords.longitude}`;
-    const url = `sms:${phoneNumber}?body=${encodeURIComponent(message)}`;
-
-    Linking.canOpenURL(url)
-      .then(supported => {
-        if (!supported) {
-          Alert.alert('Error', 'SMS is not supported on this device.');
-        } else {
-          return Linking.openURL(url);
-        }
-      })
-      .catch(err => console.error('Error occurred', err));
   };
 
   return (
@@ -148,9 +156,5 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 20,
     left: '60%',
-  },
-  title: {
-    fontSize: 24,
-    marginBottom: 20,
   },
 });

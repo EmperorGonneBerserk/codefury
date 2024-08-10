@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { View, Text, FlatList, ScrollView, StyleSheet, SafeAreaView, RefreshControl, Alert, Platform } from 'react-native';
+import { View, Text, FlatList, ScrollView, StyleSheet, SafeAreaView, RefreshControl, Alert, Platform, useWindowDimensions } from 'react-native';
 import axios from 'axios';
 import * as Notifications from 'expo-notifications';
 
@@ -10,6 +10,8 @@ const HomeScreen = () => {
   const [disasterNews, setDisasterNews] = useState([]);
   const [latestNews, setLatestNews] = useState(null);
   const [refreshing, setRefreshing] = useState(false);
+
+  const { width } = useWindowDimensions();
 
   useEffect(() => {
     fetchAllData();
@@ -137,7 +139,7 @@ const HomeScreen = () => {
   };
 
   const renderAlertItem = ({ item }) => (
-    <View style={styles.card}>
+    <View style={[styles.card, { width: width * 0.7 }]}>
       <Text style={styles.cardTitle}>{item.title}</Text>
       <Text>{item.description}</Text>
       <Text style={styles.timestamp}>{item.timestamp}</Text>
@@ -145,19 +147,19 @@ const HomeScreen = () => {
   );
 
   const renderSafetyTipItem = ({ item }) => (
-    <View style={styles.tipCard}>
+    <View style={[styles.tipCard, { width: width * 0.7 }]}>
       <Text>{item.tip}</Text>
     </View>
   );
 
   const renderCriticalUpdateItem = ({ item }) => (
-    <View style={styles.updateCard}>
+    <View style={[styles.updateCard, { width: width * 0.7 }]}>
       <Text>{item.update}</Text>
     </View>
   );
 
   const renderNewsItem = ({ item }) => (
-    <View style={styles.newsCard}>
+    <View style={[styles.newsCard, { width: width * 0.8 }]}>
       <Text style={styles.newsTitle}>{item.title}</Text>
       <Text>{item.description}</Text>
       <Text style={styles.timestamp}>{new Date(item.publishedAt).toLocaleString()}</Text>
@@ -238,7 +240,6 @@ const styles = StyleSheet.create({
     padding: 16,
     borderRadius: 8,
     marginRight: 16,
-    width: 250,
     elevation: 2,
   },
   tipCard: {
@@ -246,7 +247,6 @@ const styles = StyleSheet.create({
     padding: 16,
     borderRadius: 8,
     marginRight: 16,
-    width: 250,
     elevation: 2,
   },
   updateCard: {
@@ -254,7 +254,6 @@ const styles = StyleSheet.create({
     padding: 16,
     borderRadius: 8,
     marginRight: 16,
-    width: 250,
     elevation: 2,
   },
   newsCard: {
@@ -262,7 +261,6 @@ const styles = StyleSheet.create({
     padding: 16,
     borderRadius: 8,
     marginRight: 16,
-    width: 300,
     elevation: 2,
   },
   cardTitle: {

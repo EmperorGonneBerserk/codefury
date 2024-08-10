@@ -3,7 +3,7 @@ import { View, Text, TextInput, Button, StyleSheet, SafeAreaView, ActivityIndica
 import axios from 'axios';
 
 const WeatherUpdates = () => {
-  const [city, setCity] = useState('Bengaluru');
+  const [city, setCity] = useState('New Delhi');
   const [weatherData, setWeatherData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -48,7 +48,7 @@ const WeatherUpdates = () => {
         color="#1976D2"
         disabled={loading}
       />
-      {loading && <ActivityIndicator size="large" color="#1976D2" />}
+      {loading && <ActivityIndicator size="large" color="#1976D2" style={styles.loadingIndicator} />}
       {error && <Text style={styles.errorText}>{error}</Text>}
       {weatherData && !loading && !error && (
         <View style={styles.weatherContainer}>
@@ -71,21 +71,25 @@ const WeatherUpdates = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     alignItems: 'center',
     backgroundColor: '#f8f8f8',
     padding: 20,
   },
   searchBox: {
     width: '100%',
-    padding: 10,
+    padding: 12,
     borderWidth: 1,
     borderColor: '#ddd',
     borderRadius: 8,
-    marginBottom: 10,
+    marginBottom: 20,
+  },
+  loadingIndicator: {
+    marginTop: 20,
   },
   weatherContainer: {
     alignItems: 'center',
+    marginTop: 20,
   },
   cityName: {
     fontSize: 28,
@@ -109,10 +113,12 @@ const styles = StyleSheet.create({
     marginTop: 20,
     fontSize: 16,
     color: '#424242',
+    textAlign: 'center',
   },
   errorText: {
     fontSize: 18,
     color: 'red',
+    marginTop: 20,
   },
 });
 

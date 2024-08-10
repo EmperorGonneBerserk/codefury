@@ -1,10 +1,10 @@
-import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createDrawerNavigator } from '@react-navigation/drawer';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createStackNavigator } from '@react-navigation/stack';
+import { Ionicons } from '@expo/vector-icons'; // Import the vector icon library
+
 import LoginScreen from './screens/LoginScreen';
 import HomeScreen from './screens/HomeScreen';
 import Map from './screens/Map';
@@ -19,62 +19,86 @@ import EmergencyContactScreen from './screens/EmergencyContact';
 import ProfileScreen from './screens/ProfileScreen';
 import SafetyCheckInScreen from './screens/SafetyCheckInScreen';
 import WeatherUpdates from './screens/WeatherUpdates';
+import SplashScreen from './splashscreen'; // Import the SplashScreen component
 
-// Create navigators
-const Stack = createNativeStackNavigator();
-const Tab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
+const Tab = createBottomTabNavigator();
+const Stack = createStackNavigator();
 
-// Bottom Tab Navigator for the main screens
-function MainTabs() {
-  const phide = false;
-  return (
-    <Tab.Navigator>
-      {phide && (
-        <Tab.Screen name="Rescue" component={Rescue} />
-      )}
-      <Tab.Screen name="Home" component={HomeScreen} />
-      <Tab.Screen name="Map" component={Map} />
-      <Tab.Screen name="Report Incident" component={IncidentReportingScreen} />
-    </Tab.Navigator>
-  );
-}
+const BottomTabs = () => (
+  <Tab.Navigator
+    screenOptions={({ route }) => ({
+      tabBarIcon: ({ focused, color, size }) => {
+        let iconName;
 
-// Drawer Navigator including MainTabs and Notifications
-function DrawerNavigator() {
-  return (
-    <Drawer.Navigator>
-      <Drawer.Screen name="Feed" component={MainTabs} />
-      <Drawer.Screen name="Shelters" component={ShelterFinder} />
-      <Drawer.Screen name="Register" component={RegisterShelter} />
-      <Drawer.Screen name="AboutUs" component={AboutUsScreen} />
-      <Drawer.Screen name="ContactUs" component={ContactUsScreen} />
-      <Drawer.Screen name="Profile" component={ProfileScreen}/>
-      <Drawer.Screen name="DisasterGuide" component={DisasterPreparednessGuideScreen} />
-      <Drawer.Screen name= "EmergencyContacts" component={EmergencyContactScreen} />
-      <Drawer.Screen name="SafetyCheckin" component={SafetyCheckInScreen} />
-      <Drawer.Screen name="Weather" component={WeatherUpdates} />
-    </Drawer.Navigator>
-  );
-}
+        switch (route.name) {
+          case 'Home':
+            iconName = 'home';
+            break;
+          case 'Map':
+            iconName = 'map';
+            break;
+          case 'Report Incident':
+            iconName = 'alert';
+            break;
+          default:
+            iconName = 'home';
+            break;
+        }
 
-// Main App component with Stack Navigator for Login and DrawerNavigator
-export default function App() {
+        return <Ionicons name={iconName} size={size} color={color} />;
+      },
+      tabBarActiveTintColor: '#1976D2',
+      tabBarInactiveTintColor: 'gray',
+    })}
+  >
+    <Tab.Screen name="Home" component={HomeScreen} />
+    <Tab.Screen name="Map" component={Map} />
+    <Tab.Screen name="Report Incident" component={IncidentReportingScreen} />
+  </Tab.Navigator>
+);
+
+const DrawerNavigator = () => (
+  <Drawer.Navigator
+    screenOptions={{
+      headerShown: true,
+      drawerStyle: {
+        backgroundColor: '#fff',
+        width: 240,
+      },
+      drawerLabelStyle: {
+        fontSize: 16,
+      },
+    }}
+    drawerContentOptions={{
+      activeTintColor: '#1976D2',
+      itemStyle: { marginVertical: 5 },
+    }}
+  >
+    <Drawer.Screen name="Feed" component={BottomTabs} />
+    <Drawer.Screen name="Shelters" component={ShelterFinder} />
+    <Drawer.Screen name="Register" component={RegisterShelter} />
+    <Drawer.Screen name="AboutUs" component={AboutUsScreen} />
+    <Drawer.Screen name="ContactUs" component={ContactUsScreen} />
+    <Drawer.Screen name="Profile" component={ProfileScreen} />
+    <Drawer.Screen name="DisasterGuide" component={DisasterPreparednessGuideScreen} />
+    <Drawer.Screen name="EmergencyContacts" component={EmergencyContactScreen} />
+    <Drawer.Screen name="SafetyCheckin" component={SafetyCheckInScreen} />
+    <Drawer.Screen name="Weather" component={WeatherUpdates} />
+    <Drawer.Screen name="Rescue" component={Rescue} />
+  </Drawer.Navigator>
+);
+
+const App = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen options={{ headerShown: false }} name="Login" component={LoginScreen} />
-        <Stack.Screen name="DrawerNavigator" component={DrawerNavigator} options={{ headerShown: false }} />
+      <Stack.Navigator screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="SplashScreen" component={SplashScreen} />
+        <Stack.Screen name="Login" component={LoginScreen} />
+        <Stack.Screen name="DrawerNavigator" component={DrawerNavigator} />
       </Stack.Navigator>
     </NavigationContainer>
   );
-}
+};
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+export default App;
