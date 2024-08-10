@@ -11,6 +11,14 @@ import Map from './screens/Map';
 import IncidentReportingScreen from './screens/incidentreport';
 import Rescue from './screens/rescue';
 import ShelterFinder from './screens/shelterfinder';
+import RegisterShelter from './screens/shelterregister';
+import AboutUsScreen from './screens/AboutUs';
+import ContactUsScreen from './screens/ContactUsScreen';
+import DisasterPreparednessGuideScreen from './screens/DisasterGuide';
+import EmergencyContactScreen from './screens/EmergencyContact';
+import ProfileScreen from './screens/ProfileScreen';
+import SafetyCheckInScreen from './screens/SafetyCheckInScreen';
+import WeatherUpdates from './screens/WeatherUpdates';
 
 // Create navigators
 const Stack = createNativeStackNavigator();
@@ -38,6 +46,14 @@ function DrawerNavigator() {
     <Drawer.Navigator>
       <Drawer.Screen name="Feed" component={MainTabs} />
       <Drawer.Screen name="Shelters" component={ShelterFinder} />
+      <Drawer.Screen name="Register" component={RegisterShelter} />
+      <Drawer.Screen name="AboutUs" component={AboutUsScreen} />
+      <Drawer.Screen name="ContactUs" component={ContactUsScreen} />
+      <Drawer.Screen name="Profile" component={ProfileScreen}/>
+      <Drawer.Screen name="DisasterGuide" component={DisasterPreparednessGuideScreen} />
+      <Drawer.Screen name= "EmergencyContacts" component={EmergencyContactScreen} />
+      <Drawer.Screen name="SafetyCheckin" component={SafetyCheckInScreen} />
+      <Drawer.Screen name="Weather" component={WeatherUpdates} />
     </Drawer.Navigator>
   );
 }
