@@ -1,7 +1,7 @@
-import { useNavigation } from '@react-navigation/core';
+import { useNavigation } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
 import { KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
-import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth'; // Import the modular functions
+import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
 import { app } from '../firebase'; // Assuming your Firebase configuration is in this file
 
 const auth = getAuth(app); // Initialize the auth instance
@@ -15,12 +15,12 @@ const LoginScreen = () => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
-        navigation.replace('Main');
+        navigation.replace('DrawerNavigator'); // Use the correct screen name
       }
     });
 
     return unsubscribe;
-  }, []);
+  }, [navigation]);
 
   const handleSignUp = async () => {
     try {

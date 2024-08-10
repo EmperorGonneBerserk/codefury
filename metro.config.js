@@ -1,7 +1,16 @@
-// Learn more https://docs.expo.io/guides/customizing-metro
+// metro.config.js
 const { getDefaultConfig } = require('expo/metro-config');
 
-/** @type {import('expo/metro-config').MetroConfig} */
+// Get the default config from Expo
 const config = getDefaultConfig(__dirname);
+
+// Update resolver configuration
+config.resolver = {
+  ...config.resolver,
+  blockList: [
+    /node_modules\/expo\/build\/Expo.fx.js/, // Block problematic file
+    // Add other patterns if needed
+  ],
+};
 
 module.exports = config;
