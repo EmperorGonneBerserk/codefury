@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { View, Text, FlatList, ScrollView, StyleSheet, SafeAreaView, RefreshControl, Alert, Platform, useWindowDimensions } from 'react-native';
 import axios from 'axios';
 import * as Notifications from 'expo-notifications';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const HomeScreen = () => {
   const [disasterAlerts, setDisasterAlerts] = useState([]);
@@ -70,15 +71,17 @@ const HomeScreen = () => {
       );
 
       const newsData = response.data.articles;
-      console.log('Fetched news:', newsData); // Log the fetched news data
 
-      if (latestNews && newsData.length > 0 && newsData[0].title !== latestNews.title) {
+      // Compare with the latest news stored in async storage
+      const storedNews = await AsyncStorage.getItem('latestNews');
+      if (storedNews && newsData.length > 0 && newsData[0].title !== JSON.parse(storedNews).title) {
         sendPushNotification(newsData[0]);
       }
 
       setDisasterNews(newsData);
       if (newsData.length > 0) {
         setLatestNews(newsData[0]); // Update the latest news
+        await AsyncStorage.setItem('latestNews', JSON.stringify(newsData[0]));
       }
     } catch (error) {
       console.error('Error fetching news:', error);
@@ -281,4 +284,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default HomeScreen;
+export default HomeScreen;

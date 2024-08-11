@@ -10,8 +10,6 @@ import HomeScreen from './screens/HomeScreen';
 import Map from './screens/Map';
 import IncidentReportingScreen from './screens/incidentreport';
 import Rescue from './screens/rescue';
-import ShelterFinder from './screens/shelterfinder';
-import RegisterShelter from './screens/shelterregister';
 import AboutUsScreen from './screens/AboutUs';
 import ContactUsScreen from './screens/ContactUsScreen';
 import DisasterPreparednessGuideScreen from './screens/DisasterGuide';
@@ -19,6 +17,7 @@ import EmergencyContactScreen from './screens/EmergencyContact';
 import ProfileScreen from './screens/ProfileScreen';
 import SafetyCheckInScreen from './screens/SafetyCheckInScreen';
 import WeatherUpdates from './screens/WeatherUpdates';
+import ShelterManagement from './screens/sheltermanagement';
 import SplashScreen from './splashscreen'; // Import the SplashScreen component
 
 const Drawer = createDrawerNavigator();
@@ -52,9 +51,9 @@ const BottomTabs = () => (
       tabBarInactiveTintColor: 'gray',
     })}
   >
-    <Tab.Screen name="Home" component={HomeScreen} />
-    <Tab.Screen name="Map" component={Map} />
-    <Tab.Screen name="Report Incident" component={IncidentReportingScreen} />
+    <Tab.Screen options={{headerShown:false}} name="Home" component={HomeScreen} />
+    <Tab.Screen options={{headerShown:false}} name="Map" component={Map} />
+    <Tab.Screen options={{headerShown:false}} name="Report Incident" component={IncidentReportingScreen} />
   </Tab.Navigator>
 );
 
@@ -76,16 +75,15 @@ const DrawerNavigator = () => (
     }}
   >
     <Drawer.Screen name="Feed" component={BottomTabs} />
-    <Drawer.Screen name="Shelters" component={ShelterFinder} />
-    <Drawer.Screen name="Register" component={RegisterShelter} />
-    <Drawer.Screen name="AboutUs" component={AboutUsScreen} />
-    <Drawer.Screen name="ContactUs" component={ContactUsScreen} />
     <Drawer.Screen name="Profile" component={ProfileScreen} />
     <Drawer.Screen name="DisasterGuide" component={DisasterPreparednessGuideScreen} />
     <Drawer.Screen name="EmergencyContacts" component={EmergencyContactScreen} />
     <Drawer.Screen name="SafetyCheckin" component={SafetyCheckInScreen} />
     <Drawer.Screen name="Weather" component={WeatherUpdates} />
+    <Drawer.Screen name='Shelter' component={ShelterManagement} />
     <Drawer.Screen name="Rescue" component={Rescue} />
+    <Drawer.Screen name="AboutUs" component={AboutUsScreen} />
+    <Drawer.Screen name="ContactUs" component={ContactUsScreen} />
   </Drawer.Navigator>
 );
 

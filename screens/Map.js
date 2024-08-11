@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Button, Alert, StyleSheet, ActivityIndicator, Linking } from 'react-native';
+import { View, Button, Alert, StyleSheet, ActivityIndicator, Linking, Text } from 'react-native';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import * as Location from 'expo-location';
 import { Accelerometer } from 'expo-sensors';
@@ -99,42 +99,39 @@ export default function HomeScreen({ navigation }) {
   return (
     <View style={styles.container}>
       {loading ? (
-        <ActivityIndicator size="large" color="#0000ff" />
+        <ActivityIndicator size="large" color="#007bff" style={styles.loader} />
       ) : (
-        region && (
-          <MapView
-            style={styles.map}
-            provider={PROVIDER_GOOGLE}
-            region={region}
-            showsUserLocation
-            showsMyLocationButton
-            showsTraffic
-          >
-            {location && (
-              <Marker
-                coordinate={{
-                  latitude: location.coords.latitude,
-                  longitude: location.coords.longitude,
-                }}
-                title="You are here"
-                description="Current Location"
-              />
-            )}
-          </MapView>
-        )
-      )}
-      {!loading && (
-        <View style={styles.buttonContainer1}>
-          <Button title="Send SOS" onPress={sendSOS} />
-        </View>
-      )}
-      {!loading && (
-        <View style={styles.buttonContainer2}>
-          <Button
-            title="Go to Rescue"
-            onPress={() => navigation.navigate('Rescue')}
-          />
-        </View>
+        <>
+          {region && (
+            <MapView
+              style={styles.map}
+              provider={PROVIDER_GOOGLE}
+              region={region}
+              showsUserLocation
+              showsMyLocationButton
+              showsTraffic
+            >
+              {location && (
+                <Marker
+                  coordinate={{
+                    latitude: location.coords.latitude,
+                    longitude: location.coords.longitude,
+                  }}
+                  title="You are here"
+                  description="Current Location"
+                />
+              )}
+            </MapView>
+          )}
+          <View style={styles.buttonContainer}>
+            <Button title="Send SOS" onPress={sendSOS} color="#dc3545" />
+            <Button
+              title="Go to Rescue"
+              onPress={() => navigation.navigate('Rescue')}
+              color="#007bff"
+            />
+          </View>
+        </>
       )}
     </View>
   );
@@ -143,18 +140,25 @@ export default function HomeScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#f8f9fa', // Light gray background for a calming effect
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   map: {
     flex: 1,
+    width: '100%',
   },
-  buttonContainer1: {
+  loader: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  buttonContainer: {
     position: 'absolute',
     bottom: 20,
-    left: '20%',
-  },
-  buttonContainer2: {
-    position: 'absolute',
-    bottom: 20,
-    left: '60%',
+    width: '90%',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: 20,
   },
 });

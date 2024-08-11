@@ -81,7 +81,7 @@ const DisasterPreparednessGuideScreen = () => {
           <Text style={styles.sectionHeader}>{guide.title}</Text>
           {guide.tips.map((tip, idx) => (
             <Text key={idx} style={styles.sectionText}>
-              - {tip}
+              • {tip}
             </Text>
           ))}
           <TouchableOpacity
@@ -124,39 +124,48 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
-    backgroundColor: '#f8f8f8',
+    backgroundColor: '#e0f7fa', // Light background color for a calming effect
   },
   header: {
-    fontSize: 24,
+    fontSize: 28,
     fontWeight: 'bold',
-    marginBottom: 16,
+    marginBottom: 20,
     textAlign: 'center',
+    color: '#004d40', // Darker teal color for header
   },
   section: {
     marginBottom: 24,
-    padding: 16,
+    padding: 20,
     backgroundColor: '#ffffff',
-    borderRadius: 8,
-    elevation: 2,
+    borderRadius: 10,
+    elevation: 3, // Slight elevation for shadow effect
+    shadowColor: '#000', // Shadow color for Android
+    shadowOffset: { width: 0, height: 2 }, // Shadow offset
+    shadowOpacity: 0.1, // Shadow opacity
+    shadowRadius: 5, // Shadow blur radius
   },
   sectionHeader: {
-    fontSize: 20,
+    fontSize: 22,
     fontWeight: 'bold',
-    marginBottom: 8,
+    marginBottom: 12,
+    color: '#00796b', // Darker teal color for section headers
   },
   sectionText: {
     fontSize: 16,
     lineHeight: 24,
+    color: '#004d40', // Darker teal color for tips
+    marginBottom: 10,
   },
   button: {
-    marginTop: 12,
-    padding: 10,
-    backgroundColor: '#1976D2',
-    borderRadius: 5,
+    marginTop: 16,
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    backgroundColor: '#00796b',
+    borderRadius: 8,
     alignItems: 'center',
   },
   buttonText: {
-    color: '#fff',
+    color: '#ffffff',
     fontSize: 16,
     fontWeight: 'bold',
   },
@@ -167,31 +176,38 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   modalContent: {
-    width: '80%',
-    backgroundColor: '#fff',
+    width: '85%',
+    backgroundColor: '#ffffff',
     padding: 20,
-    borderRadius: 10,
+    borderRadius: 12,
     alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 10,
   },
   modalHeader: {
-    fontSize: 22,
+    fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 16,
+    color: '#00796b',
   },
   modalText: {
     fontSize: 18,
-    lineHeight: 24,
-    marginBottom: 8,
+    lineHeight: 26,
+    marginBottom: 12,
+    color: '#004d40',
   },
   closeButton: {
-    marginTop: 16,
-    padding: 10,
-    backgroundColor: '#1976D2',
-    borderRadius: 5,
+    marginTop: 20,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    backgroundColor: '#00796b',
+    borderRadius: 8,
     alignItems: 'center',
   },
   closeButtonText: {
-    color: '#fff',
+    color: '#ffffff',
     fontSize: 16,
     fontWeight: 'bold',
   },

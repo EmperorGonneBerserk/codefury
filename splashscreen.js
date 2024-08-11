@@ -6,8 +6,8 @@ import { getAuth, onAuthStateChanged } from 'firebase/auth';
 const SplashScreen = () => {
   const navigation = useNavigation();
   const opacity = new Animated.Value(0);
-  const scale = new Animated.Value(0.5); // Initial scale value
-  const { width, height } = useWindowDimensions();
+  const scale = new Animated.Value(0.5);
+  const { width } = useWindowDimensions();
 
   useEffect(() => {
     const auth = getAuth();
@@ -39,6 +39,10 @@ const SplashScreen = () => {
 
   return (
     <View style={styles.container}>
+      <Image
+        source={require('./assets/Splash2.png')} // Use a light, calming background image
+        style={styles.backgroundImage}
+      />
       <Animated.View style={{ ...styles.logoContainer, opacity, transform: [{ scale }] }}>
         <Image
           source={require('./assets/logo.png')}
@@ -55,21 +59,26 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'white',
+    backgroundColor: '#F0F4F8',
+  },
+  backgroundImage: {
+    position: 'absolute',
+    width: '100%',
+    height: '100%',
+    resizeMode: 'cover', // Ensures the image covers the entire screen
+    opacity: 0.2, // Softens the background image to maintain focus on the logo
   },
   logoContainer: {
     justifyContent: 'center',
     alignItems: 'center',
   },
   logo: {
-    width: 100,
-    height: 100,
     marginBottom: 20,
   },
   logoText: {
     fontSize: 30,
     fontWeight: 'bold',
-    color: 'blue',
+    color: '#4CAF50',
   },
 });
 

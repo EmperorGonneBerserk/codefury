@@ -79,16 +79,19 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: '#F0F4F8',
   },
   inputContainer: {
     width: '80%',
   },
   input: {
-    backgroundColor: 'white',
+    backgroundColor: '#E8ECF0',
     paddingHorizontal: 15,
     paddingVertical: 10,
     borderRadius: 10,
     marginTop: 5,
+    borderColor: '#B0BEC5',
+    borderWidth: 1,
   },
   buttonContainer: {
     width: '60%',
@@ -97,16 +100,16 @@ const styles = StyleSheet.create({
     marginTop: 40,
   },
   button: {
-    backgroundColor: '#0782F9',
+    backgroundColor: '#4CAF50',
     width: '100%',
     padding: 15,
     borderRadius: 10,
     alignItems: 'center',
   },
   buttonOutline: {
-    backgroundColor: 'white',
+    backgroundColor: '#E8ECF0',
     marginTop: 5,
-    borderColor: '#0782F9',
+    borderColor: '#4CAF50',
     borderWidth: 2,
   },
   buttonText: {
@@ -115,7 +118,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   buttonOutlineText: {
-    color: '#0782F9',
+    color: '#4CAF50',
     fontWeight: '700',
     fontSize: 16,
   },

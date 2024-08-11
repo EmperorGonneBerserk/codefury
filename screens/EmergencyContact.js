@@ -14,7 +14,10 @@ const emergencyContacts = [
 
 const EmergencyContactScreen = () => {
   const renderItem = ({ item }) => (
-    <TouchableOpacity style={styles.card} onPress={() => Linking.openURL(`tel:${item.number}`)}>
+    <TouchableOpacity
+      style={styles.card}
+      onPress={() => Linking.openURL(`tel:${item.number}`)}
+    >
       <Text style={styles.name}>{item.name}</Text>
       <Text style={styles.number}>{item.number}</Text>
     </TouchableOpacity>
@@ -22,7 +25,7 @@ const EmergencyContactScreen = () => {
 
   return (
     <View style={styles.container}>
-      
+      <Text style={styles.header}>Emergency Contacts</Text>
       <FlatList
         data={emergencyContacts}
         renderItem={renderItem}
@@ -37,13 +40,14 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
-    backgroundColor: '#f8f8f8',
+    backgroundColor: '#e0f7fa', // Light teal background for a calm feel
   },
   header: {
-    fontSize: 24,
+    fontSize: 26,
     fontWeight: 'bold',
-    marginBottom: 16,
+    marginBottom: 20,
     textAlign: 'center',
+    color: '#00796b', // Darker teal color for header
   },
   listContainer: {
     paddingBottom: 16,
@@ -51,9 +55,13 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: '#ffffff',
     padding: 16,
-    borderRadius: 8,
+    borderRadius: 10,
     marginBottom: 12,
-    elevation: 2,
+    elevation: 3, // Slight elevation for a shadow effect
+    shadowColor: '#000', // Shadow color for Android
+    shadowOffset: { width: 0, height: 2 }, // Shadow offset
+    shadowOpacity: 0.2, // Shadow opacity
+    shadowRadius: 6, // Shadow blur radius
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -61,10 +69,11 @@ const styles = StyleSheet.create({
   name: {
     fontSize: 18,
     fontWeight: 'bold',
+    color: '#004d40', // Darker teal color for names
   },
   number: {
     fontSize: 16,
-    color: '#1976D2',
+    color: '#1976D2', // Blue color for numbers
   },
 });
 
