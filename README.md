@@ -27,7 +27,7 @@ Clone the repository:
 
 bash
 Copy code
-git clone https://github.com/yourusername/sanjeevini.git
+https://github.com/EmperorGonneBerserk/codefury/tree/main
 cd sanjeevini
 Install dependencies:
 
